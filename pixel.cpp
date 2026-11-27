@@ -15,7 +15,7 @@ rgba_pixel* pixellate(unsigned char* raw_data, int w, int h, int c){
     return array;
 }
 
-void downsample(rgba_pixarr* pixarr, int scale){
+void downsample(rgba_pixarr* pixarr, int scale){ //Downsamples a pixel array by a scale factor
     //Precompute some useful constants
     int SAMPLED_W = pixarr->w/scale;
     int SAMPLED_H = pixarr->h/(scale*2);
@@ -55,11 +55,11 @@ void downsample(rgba_pixarr* pixarr, int scale){
     return;
 }
 
-unsigned char brightness(rgba_pixel p){
+unsigned char brightness(rgba_pixel p){ //Converts a pixel to a human-vision weighted brighness value in [0, 255]
     return p.a*(3*p.r + 10*p.g + p.b)/14/255;
 }
 
-void pa_to_ascii(rgba_pixarr* pa, const char* map, int map_len){
+void pa_to_ascii(rgba_pixarr* pa, const char* map, int map_len){ //Prints out a pixel array as ascii according to a brightness map
     for(int i=0; i<pa->h; i++){
         for(int j=0; j<pa->w; j++){
             printf("%c", map[brightness(pa->data[pa->w*i + j]) *(map_len-1)/255]);
