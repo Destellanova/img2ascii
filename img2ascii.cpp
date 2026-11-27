@@ -62,24 +62,21 @@ int main(int argc, char* argv[]){
 
         //Process file into a pixel array
         unsigned char* img_raw = stbi_load(file_paths[path].data(), &width, &height, &channels, 0);
-        printf("File %s loaded, with height %d, width %d, and %d channels, rescaled by %d\n", file_paths[path].data(), width, height, channels, scale);
-        rgba_pixel* pixel_array = pixellate(img_raw, width, height, channels);
+        rgba_pixarr pixel_array;
+        pixel_array.data = pixellate(img_raw, width, height, channels);
+        pixel_array.h = height;
+        pixel_array.w = width;
         free(img_raw);
 
+        printf("File %s loaded, with height %d, width %d, and %d channels, rescaled by %d\n", file_paths[path].data(), width, height, channels, scale);
+
         //Downsample pixel array
-        pixel_array = downsample(pixel_array, width, height, scale);
-        int pixarr_w = width/scale;
-        int pixarr_h = height/scale/2;
-        for(int i=0; i<pixarr_h; i++){
-            for(int j=0; j<pixarr_w; j++){
-                printf("%c", BRIGHTNESS_MAP_LIGHT[brightness(pixel_array[pixarr_w*i+j])*9/255]);
-            }
-            printf("\n");
-        }
-        free(pixel_array);
+        downsample(&pixel_array, scale);
+        
+        //Print pixel_array as ascii
+        pa_to_ascii(&pixel_array, BRIGHTNESS_MAP_DARK, 10);
                 
     }
-    // Free memory
 
 
 }
